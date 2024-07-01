@@ -1,0 +1,142 @@
+caching to fetch data fastly isntead of db / hdd.
+
+
+all app server connect  to cache client which wiill talk to cache server
+
+consistent hasging to allocate servers
+
+1.cache aside normal put data in cache if cache miss fyech from db and then store in cache
+2. read throygh cache cache library takes responsilibiyt to update the request . cache document should be shared as db
+3. write around  when put request come it has to mark the older data as stale and then when new request come for fetch
+it will always goes to db
+
+4.write through wrute to data and cache both sync
+5. wrtite back where we directly update the cache and async we update the db
+
+
+Load balancer
+
+static allocation
+
+based on hashing key , round roubin , weighted round robin
+dynamic based on load
+
+
+
+database create a data page to store rows where it contains header which contain avail memory etc and actual rows and
+the last part contain point which point to the record but the pointer in the third col are not in order
+
+data page are mapped to data block in memory and avg size is  8kb
+
+dbms maintain mapping b/w datapage and datablock
+
+
+data is stored in btress and each tree can have m-1 keys where m is order and m is the max child the node can have
+offset hold the index in the order and the actual rows are stored as it is
+
+there r 2 type of index clustered and non clsu
+
+and in clustered there is ordering based on single key
+
+and in non clsutered there is also secondry key but the ordering of the data will not be on basis of that secondary key
+it will create another b+ tree for fast searching
+
+
+
+concurrency
+
+use synchronized when using single server system
+
+
+db locking
+
+
+shared lock used for reading  once applied some process with same lock can read but not write
+exclusive lock used for writing once applied nothing can be write/read
+
+isolation tells how much concurrency is allowed
+dirty read
+can read uncommited data from different transaction
+
+
+
+
+non repeatable read
+after commit it read and then seeing diff value for same transaction of its own
+
+phantom read
+same like non repeatable read but return diff row
+
+optimistic concurrency
+read uncommited only read because it has all 3 problem, high consisyency
+read commited -> only read no lock but write lock , less consisyency than 1
+
+pessimisic concurrency
+repetable read-> shared lock also at end of transaction ( this is used in mysql innodb)
+serializable -> put lock in the range
+
+
+2pl
+
+in first phase lock can only be acquired and in phase 2 lock can only be released
+one cannot acquire more lock once phase 2 has started
+
+in basic 2pl we can have deadlock because
+
+acuire lock 1 by A  acuire lock 2 by B
+
+try acuire lock 2 by A  try acuire lock 1 by B
+
+how to avoid lock by timeout but it is possible that the other process is taking long time and they r not in deadlock
+
+directed graph to denote 1 is waiting for 2 to release, if cycle exist scheduler use creteria like cost, time to release
+ /abort the transaction
+
+ strong strict 2pl in which once lock is acquire and when release phase comes it tries to hold the lock till the
+ transaction
+  is
+  complete this is done to avoid dirty read (some transaction read dirty value so it has to abort itself)
+
+
+Ouath2
+
+resource owner -> sameer
+client -> instagram
+authorization server -> gmail
+resource server-> gmail
+
+
+client has to register to authorization server and give the redirect uri where it want to get once resource owner logged
+ in
+ authorization code willbe given by authorization server and it will also return state which use to save from csrf
+ attack
+ also we need to fetch access token  using authorization code, client id and client secret (last2 which client used to
+ register)
+ also sever give refresh token
+
+
+
+
+encryption and decyrption
+
+symmetric -> encryption and decryption happen via same key.
+assymetric ->encryption and decryption happen via different key. (public is used to encrypt , private is used to
+decrypt) more secure as it does not need to transfer key via network,
+
+AES for symmetric encryption and it breaks data into 128 bits
+
+ duffman exchange protocol to send key between the
+server client
+
+
+RSAused 2048 and it more secure than above
+
+group of 4 bytes is called word
+
+and it created 44 such group by xoring it
+
+now we need to do add round key
+
+
+
+
